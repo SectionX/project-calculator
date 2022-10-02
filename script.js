@@ -1,11 +1,70 @@
 // functions
 
-function evaluate() {field.textContent = "evaluated";}
+
+
+function evaluate(e, str = field.textContent+" ") {
+    while (str.match(/\(/)) {
+        let propenindex = Array.from(str.matchAll(/\(/g));
+        propenindex = propenindex[propenindex.length-1].index
+        let prcloseindex = str.match(/\)/).index;
+        parenthesiscontent = str.slice(propenindex+1, prcloseindex)
+        str = str.replace(`(${parenthesiscontent})`, evaluate(e, parenthesiscontent))
+    }
+
+    while (str.match(/[\^√]/)) {
+        pattern = /(\d*\.?\d*)([\^√])(\d+\.?\d*)(?=[^\^])/g
+        let digits = Array.from(str.matchAll(pattern))[Array.from(str.matchAll(pattern)).length - 1]
+        let digit1 = digits[1]
+        let digit2 = digits[3]
+        let operator = digits[2]
+        str = str.replace(pattern, function_map[operator](+digit1, +digit2))
+
+    }
+
+    while (str.match(/[*\/]/)) {
+        pattern = /(\d+\.?\d*)([*\/])(\d+\.?\d*)/g
+        let digits = Array.from(str.matchAll(pattern))[0]
+        let digit1 = digits[1]
+        let digit2 = digits[3]
+        let operator = digits[2] 
+        str = str.replace(pattern, function_map[operator](+digit1, +digit2))
+    }
+
+
+    while (str.match(/[+-]/)) {
+        pattern = /(\d+\.?\d*)([+-])(\d+\.?\d*)/g
+        let digits = Array.from(str.matchAll(pattern))[0]
+        let digit1 = digits[1]
+        let digit2 = digits[3]
+        let operator = digits[2] 
+        str = str.replace(pattern, function_map[operator](+digit1, +digit2))
+    }
+    return((Math.floor(Number(str)*10000)/10000).toString().trim())
+}
+
+function add(a,b) {return a+b;}
+function subtract(a,b) {return a-b;}
+function multiply(a,b) {return a*b;}
+function divide(a,b) {return a/b;}
+function pow(a,b) {return Math.pow(a,b).toString();}
+function rt(a,b) {return a ? Math.pow(b, 1/a) : Math.pow(b, 0.5);}
+
+
+
 function clearall() {field.textContent = "";}
 function clearentry() {field.textContent = field.textContent.slice(0,-2)}
 
 
 // delarations
+
+const function_map = {
+    '+' : add,
+    '-' : subtract,
+    '*' : multiply,
+    '/' : divide,
+    '^' : pow,
+    '√' : rt
+};
 
 const digits = {
     'one': '1', 
@@ -21,10 +80,10 @@ const digits = {
 }
 
 const operator_buttons = {
-    'plus': " + ", 
-    'minus': " - ",
-    'division': " / ",
-    'multiplication': " * ", 
+    'plus': "+", 
+    'minus': "-",
+    'division': "/",
+    'multiplication': "*", 
     'pow': "^",
     'root': "√", 
     'leftbracket': "(",
@@ -35,18 +94,20 @@ const operator_buttons = {
 };
 
 const keydown_operator_map = {
-    "+" : " + ",
-    "-" : " - " ,
-    "*" : " * ",
-    "/" : " / ",
-    "%" : " % ",
+    "+" : "+",
+    "-" : "-" ,
+    "*" : "*",
+    "/" : "/",
+    "%" : "%",
     "^" : "^",
     " " : "",
+    "(" : "(",
+    ")" : ")"
 };
 
 
 const function_buttons = {
-'equals': evaluate,
+'equals': () => field.textContent = evaluate(),
 'clearentry': clearentry, 
 'clearall': clearall
 }
@@ -60,7 +121,7 @@ const operatorbuttons = Object.keys(operator_buttons).map(id =>
 const functionbuttons = Object.keys(function_buttons).map(id => 
     document.querySelector(`#${id}`));
 
-const field = document.querySelector('.inputfield');
+const field = document.querySelector('p.inputfield');
     
 
 
@@ -83,12 +144,19 @@ functionbuttons.forEach(button =>
 
 
 window.addEventListener('keydown', (e) => {
+    event.preventDefault()
+    if (e.key == 'Space') {return false;}
     field.textContent += !isNaN(Number(e.key)) ? e.key : "";
     const nums = field.textContent.split(" ");
     let lastnum = nums[nums.length-1];
-    field.textContent += ((e.key == ',' || e.key == ".") && !lastnum.match(",")) ? ',' : "";
+    field.textContent += ((e.key == ',' || e.key == ".") && !lastnum.match(/\.+/)) ? '.' : "";
     field.textContent += (Object.keys(keydown_operator_map).some(el => {return el == e.key})) ? keydown_operator_map[e.key] : "";
-    if (e.key == "Enter") {
-        evaluate()
+    if (e.key == "Enter") { 
+        field.textContent = evaluate();
     }
+    if (e.key == "Backspace") {
+        clearentry();
+    }
+    field.textContent = field.textContent.replace(" ", "")
+    
 });
