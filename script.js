@@ -21,8 +21,8 @@ function evaluate(e, str = field.textContent+" ") {
 
     }
 
-    while (str.match(/[*\/]/)) {
-        pattern = /(\d+\.?\d*)([*\/])(\d+\.?\d*)/g
+    while (str.match(/[*\/%]/)) {
+        pattern = /(\d+\.?\d*)([*\/%])(\d+\.?\d*)/g
         let digits = Array.from(str.matchAll(pattern))[0]
         let digit1 = digits[1]
         let digit2 = digits[3]
@@ -48,6 +48,7 @@ function multiply(a,b) {return a*b;}
 function divide(a,b) {return a/b;}
 function pow(a,b) {return Math.pow(a,b).toString();}
 function rt(a,b) {return a ? Math.pow(b, 1/a) : Math.pow(b, 0.5);}
+function mod(a,b) {return a%b;}
 
 
 
@@ -63,7 +64,8 @@ const function_map = {
     '*' : multiply,
     '/' : divide,
     '^' : pow,
-    '√' : rt
+    '√' : rt,
+    '%' : mod
 };
 
 const digits = {
@@ -88,8 +90,8 @@ const operator_buttons = {
     'root': "√", 
     'leftbracket': "(",
     'rightbracket': ")",
-    'comma': ",",
-    'modulus': " % ", 
+    'comma': ".",
+    'modulus': "%", 
 
 };
 
@@ -135,6 +137,11 @@ digitbuttons.forEach(button =>
 operatorbuttons.forEach(button => 
     button.addEventListener("click", () => {
         field.textContent += operator_buttons[button.getAttribute("id")];
+        const nums = field.textContent.split(" ");
+    let lastnum = nums[nums.length-1];
+        if (lastnum.slice(0,-1).match(/\./) && field.textContent[field.textContent.length-1] == ".") {
+            console.log('true')
+            field.textContent = (field.textContent.slice(0,-1));}
     }));
 
 functionbuttons.forEach(button => 
@@ -158,5 +165,6 @@ window.addEventListener('keydown', (e) => {
         clearentry();
     }
     field.textContent = field.textContent.replace(" ", "")
+    if (lastnum.slice(0,-1).match(/\./) && field.textContent[field.textContent.length-1] == ".") {field.textContent = field.textContent.slice(0,-2);}
     
 });

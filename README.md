@@ -3,6 +3,14 @@ The Odin Project assignment.
 
 Version History:
 
+v1.1
+
+- Fixed a bug that typed comma instead of dot for decimals
+- Implemented modulus
+- Added handling for multiple dots per number.
+- Deployed on github.io
+
+
 v1.0
 
 - Added evaluation function
@@ -21,6 +29,9 @@ Future plans:
 
 - GUI overhaul
 - Support for trigonometric operations and pi
+
+
+Visit the webpage here: https://sectionx.github.io/project-calculator/
 
 Notes: 
 
