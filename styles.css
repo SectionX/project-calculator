@@ -1,0 +1,76 @@
+/* general */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    /* border: 1px solid red; */
+}
+
+html {
+    display: flex;
+    justify-content: center;
+    margin: 50px 0 0 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid black;
+    width: 300px;
+    height: 280px;
+}
+
+/* dimensions */
+
+h1 {
+    margin: 0 0 20px 0;
+}
+
+.app {
+    width: 266px;
+    height: 180px;
+}
+
+.inputfield {
+    width: 260px;
+    height: 50px;
+    text-align: right;
+}
+
+button {
+    height: 30px;
+    width: 40px;
+}
+
+button#equals {
+    width: 84px;
+}
+
+/* layout */
+
+.app, .buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+/* styles */
+
+.inputfield {
+    font-size: 18px;
+    font-weight: 100;
+}
+
+body {
+    border-radius: 20px;
+}
+
+.inputfield {
+    border-color: buttonborder;
+    border:1px outset grey;
+}
